@@ -38,7 +38,7 @@ jobs:
 
       - name: Publish Windows x64
         run: |
-          dotnet publish src/SF2Converter/SF2Converter.csproj \
+          dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj \
             --configuration Release \
             --runtime win-x64 \
             --self-contained true \
@@ -48,7 +48,7 @@ jobs:
 
       - name: Publish Linux x64
         run: |
-          dotnet publish src/SF2Converter/SF2Converter.csproj \
+          dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj \
             --configuration Release \
             --runtime linux-x64 \
             --self-contained true \
@@ -58,7 +58,7 @@ jobs:
 
       - name: Publish macOS x64
         run: |
-          dotnet publish src/SF2Converter/SF2Converter.csproj \
+          dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj \
             --configuration Release \
             --runtime osx-x64 \
             --self-contained true \
@@ -68,7 +68,7 @@ jobs:
 
       - name: Publish macOS ARM64
         run: |
-          dotnet publish src/SF2Converter/SF2Converter.csproj \
+          dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj \
             --configuration Release \
             --runtime osx-arm64 \
             --self-contained true \
@@ -84,19 +84,19 @@ jobs:
           mkdir -p release
 
           zip -j \
-            "release/SF2Converter-${VERSION}-win-x64.zip" \
+            "release/SF2ToDSConverter-${VERSION}-win-x64.zip" \
             publish/win-x64/*
 
           tar -czf \
-            "release/SF2Converter-${VERSION}-linux-x64.tar.gz" \
+            "release/SF2ToDSConverter-${VERSION}-linux-x64.tar.gz" \
             -C publish/linux-x64 .
 
           tar -czf \
-            "release/SF2Converter-${VERSION}-osx-x64.tar.gz" \
+            "release/SF2ToDSConverter-${VERSION}-osx-x64.tar.gz" \
             -C publish/osx-x64 .
 
           tar -czf \
-            "release/SF2Converter-${VERSION}-osx-arm64.tar.gz" \
+            "release/SF2ToDSConverter-${VERSION}-osx-arm64.tar.gz" \
             -C publish/osx-arm64 .
 
       - name: Create GitHub Release
@@ -105,6 +105,6 @@ jobs:
         run: |
           gh release create "${{ inputs.version }}" \
             release/* \
-            --title "SF2Converter ${{ inputs.version }}" \
+            --title "SF2ToDSConverter ${{ inputs.version }}" \
             --generate-notes
             
