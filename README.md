@@ -132,7 +132,7 @@ Piano1.dspreset
 The program does not describe or show it:
 
 ```text
-OMITTED: the .dspreset already exists.
+SKIPPED: the .dspreset already exists.
 ```
 
 ## License
