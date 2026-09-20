@@ -1,41 +1,36 @@
 # SF2Converter
 
-Pequeña aplicación de consola multiplataforma escrita en C#/.NET para convertir
-ficheros `SF2` a `DSPRESET` utilizando un ejecutable externo llamado `SF22DS`.
+> [!WARNING]
+> This utility uses [SF22DS](https://github.com/DecentSamples/SF22DS), a converter for SF2 sound fonts into Decent Sampler preset developed by **David Hilowitz**
+> `SF22DS` is an external component and is not part of this repository. Its license and distribution terms depend on its author.
+> You have to put **SF22DS** in the same directory of **SF2toDSConverter**
 
-## Qué hace
+## What is `SF2toDSConverter`
 
-- Busca todos los ficheros `.sf2` de una carpeta y todos sus subdirectorios.
-- Para cada `archivo.sf2` ejecuta:
+`SF2toDSConverter` is a small cross-platform console application written in C#/.NET for converting `SF2` files to `DSPRESET` using an external executable named `SF22DS`.
+
+`SF2toDSConverter` is not a converter really, but also an utility to help the conversion when you have a lot of *SF2 sound fonts* in multiple directories and subdirectories, enabling batch conversion of all discovered files in a single run.
+
+## What does this utility do?
+
+- Searches for all `.sf2` files in a folder and all its subdirectories.
+- For each `file.sf2`, executes the standard conversion command:
 
 ```text
-SF22DS "archivo.sf2" "archivo.dspreset"
+SF22DS "file.sf2" "file.dspreset"
 ```
 
-- El `.dspreset` se crea en la misma carpeta que el `.sf2`.
-- Si el `.dspreset` ya existe, el archivo se omite.
-- Muestra el progreso y un resumen al terminar.
-- No necesita ninguna biblioteca externa de terceros.
+- The `.dspreset` file is created in the same folder as the `.sf2` file.
+- If the `.dspreset` file already exists, the file is skipped.
+- Displays progress and a summary upon completion.
+- Does not require any external third-party libraries.
 
-## Requisito importante: SF22DS
+## Use case
 
-Este proyecto es multiplataforma, pero `SF22DS` es un programa externo.
-Para convertir realmente los archivos, debe existir una versión de `SF22DS`
-compatible con el sistema operativo utilizado.
-
-Por defecto:
-
-- Windows: `SF22DS.exe`
-- Linux/macOS: `SF22DS`
-
-Coloca el conversor en la carpeta raíz que vas a procesar.
-
-## Ejemplo
-
-Supongamos esta estructura:
+Let us assume this structure:
 
 ```text
-MiBiblioteca/
+MyLibrary/
 ├── SF22DS.exe
 ├── Pianos/
 │   ├── Grand/
@@ -47,7 +42,7 @@ MiBiblioteca/
     └── Violin.sf2
 ```
 
-Ejecutando el programa desde `MiBiblioteca` se producirán:
+Executing `SF2ToDSConverter` from `MyLibrary` will generate:
 
 ```text
 Pianos/Grand/Piano1.dspreset
@@ -56,100 +51,90 @@ Pianos/Electric/EPiano.dspreset
 Strings/Violin.dspreset
 ```
 
-## Uso
+## How to use
 
-### Opción sencilla
+### Easy and quick option
 
-Sitúate en la carpeta que quieres procesar y ejecuta:
-
-```bash
-SF2Converter
-```
-
-El programa utilizará la carpeta actual como raíz.
-
-También puedes indicar explícitamente la carpeta:
+Navigate to the folder you want to process and run:
 
 ```bash
-SF2Converter "/ruta/a/MiBiblioteca"
+SF2ToDSConverter
 ```
 
-### Indicar otra ubicación para SF22DS
+The program will use the current folder as the root.
 
-El segundo argumento permite indicar la ruta al conversor:
+You can also explicitly specify the folder:
 
 ```bash
-SF2Converter "/ruta/a/MiBiblioteca" "/ruta/a/SF22DS.exe"
+SF2ToDSConverter "/folder/other/MyLibrary"
 ```
 
-## Compilar con Visual Studio
+### How to specify a different location for SF22DS
 
-1. Abre `SF2Converter.sln`.
-2. Selecciona `Release`.
-3. Compila el proyecto.
-4. Ejecuta el programa desde la carpeta que contiene la biblioteca SF2.
+The second argument allows you to specify the path to the converter:
 
-El proyecto utiliza `.NET 10`.
+```bash
+SF2ToDSConverter "/folder/other/MyLibrary" "/Converter/SF22DS.exe"
+```
 
-## Compilar desde la línea de comandos
+## How to compile the project with Visual Studio
 
-Necesitas tener instalado el SDK de .NET 10.
+> [!Note]
+> Only if you want to build the project at your own.
+> (In this repository, You will find binaries ready to use it)
+
+1. Open `SF2ToDSConverter.sln`.
+2. Select `Release`.
+3. Build the project.
+4. Execute the program from the folder that contains the SF2 sound fonts.
+
+The project uses `.NET 10`.
+
+## Compile the project from the command line
+
+You need to have the .NET 10 SDK installed.
 
 ```bash
 dotnet build -c Release
 ```
 
-Para ejecutarlo:
+## Publish as executable
+
+Sample for Windows x64:
 
 ```bash
-dotnet run -- "/ruta/a/MiBiblioteca"
+dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj   -c Release   -r win-x64   --self-contained true   -p:PublishSingleFile=true
 ```
 
-## Publicar como ejecutable
-
-Ejemplo para Windows x64:
+Sample for Linux x64:
 
 ```bash
-dotnet publish src/SF2Converter/SF2Converter.csproj   -c Release   -r win-x64   --self-contained true   -p:PublishSingleFile=true
+dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj   -c Release   -r linux-x64   --self-contained true   -p:PublishSingleFile=true
 ```
 
-Ejemplo para Linux x64:
+Sample for macOS Apple Silicon:
 
 ```bash
-dotnet publish src/SF2Converter/SF2Converter.csproj   -c Release   -r linux-x64   --self-contained true   -p:PublishSingleFile=true
+dotnet publish src/SF2ToDSConverter/SF2ToDSConverter.csproj   -c Release   -r osx-arm64   --self-contained true   -p:PublishSingleFile=true
 ```
 
-Ejemplo para macOS Apple Silicon:
+> [!WARNING]
+> This application can be executed for all systems, but `SF22DS` must exist, also for the corresponding operating system.
 
-```bash
-dotnet publish src/SF2Converter/SF2Converter.csproj   -c Release   -r osx-arm64   --self-contained true   -p:PublishSingleFile=true
-```
+## Behavior regarding existing files
 
-La aplicación C# puede publicarse para esos sistemas, pero `SF22DS` debe existir
-también para el sistema operativo correspondiente.
-
-## Comportamiento ante archivos existentes
-
-Por seguridad, si ya existe:
+For safety, if it already exists:
 
 ```text
 Piano1.dspreset
 ```
 
-el programa no lo sobrescribe y muestra:
+The program does not describe or show it:
 
 ```text
-OMITIDO: ya existe el .dspreset
+OMITTED: the .dspreset already exists.
 ```
 
-## Licencia
+## License
 
-Este proyecto está publicado bajo la licencia MIT. Consulta `LICENSE`.
-
-## Nota sobre SF22DS
-
-`SF22DS` es un componente externo y no forma parte de este repositorio.
-Su licencia y condiciones de distribución dependen de su autor.
-
-Este proyecto únicamente ejecuta dicho programa y le proporciona dos argumentos:
-el fichero SF2 de entrada y el fichero DSPRESET de salida.
+This project is published under the MIT license. See `LICENSE`.
