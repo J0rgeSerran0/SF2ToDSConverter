@@ -1,0 +1,110 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (example: v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Validate version
+        shell: bash
+        run: |
+          VERSION="${{ inputs.version }}"
+
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version: $VERSION"
+            echo "Expected format: v1.0.0"
+            exit 1
+          fi
+
+      - name: Publish Windows x64
+        run: |
+          dotnet publish src/SF2Converter/SF2Converter.csproj \
+            --configuration Release \
+            --runtime win-x64 \
+            --self-contained true \
+            --property:PublishSingleFile=true \
+            --property:IncludeNativeLibrariesForSelfExtract=true \
+            --output publish/win-x64
+
+      - name: Publish Linux x64
+        run: |
+          dotnet publish src/SF2Converter/SF2Converter.csproj \
+            --configuration Release \
+            --runtime linux-x64 \
+            --self-contained true \
+            --property:PublishSingleFile=true \
+            --property:IncludeNativeLibrariesForSelfExtract=true \
+            --output publish/linux-x64
+
+      - name: Publish macOS x64
+        run: |
+          dotnet publish src/SF2Converter/SF2Converter.csproj \
+            --configuration Release \
+            --runtime osx-x64 \
+            --self-contained true \
+            --property:PublishSingleFile=true \
+            --property:IncludeNativeLibrariesForSelfExtract=true \
+            --output publish/osx-x64
+
+      - name: Publish macOS ARM64
+        run: |
+          dotnet publish src/SF2Converter/SF2Converter.csproj \
+            --configuration Release \
+            --runtime osx-arm64 \
+            --self-contained true \
+            --property:PublishSingleFile=true \
+            --property:IncludeNativeLibrariesForSelfExtract=true \
+            --output publish/osx-arm64
+
+      - name: Prepare release packages
+        shell: bash
+        run: |
+          VERSION="${{ inputs.version }}"
+
+          mkdir -p release
+
+          zip -j \
+            "release/SF2Converter-${VERSION}-win-x64.zip" \
+            publish/win-x64/*
+
+          tar -czf \
+            "release/SF2Converter-${VERSION}-linux-x64.tar.gz" \
+            -C publish/linux-x64 .
+
+          tar -czf \
+            "release/SF2Converter-${VERSION}-osx-x64.tar.gz" \
+            -C publish/osx-x64 .
+
+          tar -czf \
+            "release/SF2Converter-${VERSION}-osx-arm64.tar.gz" \
+            -C publish/osx-arm64 .
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ inputs.version }}" \
+            release/* \
+            --title "SF2Converter ${{ inputs.version }}" \
+            --generate-notes
+            
