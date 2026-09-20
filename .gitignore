@@ -1,0 +1,18 @@
+.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Generated conversion files
+*.dspreset
+
+# Local converter binaries - normally supplied separately
+SF22DS.exe
+SF22DS
+
+# OS files
+.DS_Store
+Thumbs.db
