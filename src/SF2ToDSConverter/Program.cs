@@ -3,7 +3,7 @@ using System.Diagnostics;
 const string AppName = "SF2ToDSConverter";
 
 Console.WriteLine("==============================================");
-Console.WriteLine("             SF2 -> DSPRESET");
+Console.WriteLine("             SF2 => DSPRESET");
 Console.WriteLine("==============================================");
 Console.WriteLine();
 
@@ -13,7 +13,7 @@ string root = args.Length > 0
 
 if (!Directory.Exists(root))
 {
-    Console.WriteLine($"ERROR: La carpeta no existe: {root}");
+    Console.WriteLine($"ERROR: The folder does not exist: {root}");
     return 1;
 }
 
@@ -25,15 +25,15 @@ string converter = FindConverter(root, converterOverride);
 
 if (converter is null)
 {
-    Console.WriteLine("ERROR: No se ha encontrado el conversor SF22DS.");
+    Console.WriteLine("ERROR: The converter: 'SF22DS' was not found");
     Console.WriteLine();
-    Console.WriteLine("Coloca SF22DS.exe (Windows) o SF22DS (Linux/macOS)");
-    Console.WriteLine("en la carpeta raíz, o indica su ruta como segundo argumento.");
+    Console.WriteLine("Place SF22DS.exe (Windows) or SF22DS (Linux/macOS)");
+    Console.WriteLine("in the root folder, or specify its path as the second argument.");
     return 1;
 }
 
-Console.WriteLine($"Carpeta raíz : {root}");
-Console.WriteLine($"Conversor    : {converter}");
+Console.WriteLine($"Root folder  : {root}");
+Console.WriteLine($"Converter    : {converter}");
 Console.WriteLine();
 
 string[] files;
@@ -48,16 +48,16 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"ERROR al buscar archivos: {ex.Message}");
+    Console.WriteLine($"ERROR searching for files: {ex.Message}");
     return 1;
 }
 
-Console.WriteLine($"Ficheros SF2 encontrados: {files.Length}");
+Console.WriteLine($"SF2 files found: {files.Length}");
 Console.WriteLine();
 
 if (files.Length == 0)
 {
-    Console.WriteLine("No hay nada que convertir.");
+    Console.WriteLine("There is nothing to convert.");
     return 0;
 }
 
@@ -74,7 +74,7 @@ for (int i = 0; i < files.Length; i++)
 
     if (File.Exists(dspreset))
     {
-        Console.WriteLine("  OMITIDO: ya existe el .dspreset");
+        Console.WriteLine("  SKIPPED: .dspreset already exists");
         skipped++;
         continue;
     }
@@ -88,7 +88,7 @@ for (int i = 0; i < files.Length; i++)
             CreateNoWindow = true
         };
 
-        // ArgumentList evita problemas con espacios y caracteres especiales.
+        // ArgumentList avoid problems with spaces and special characters.
         startInfo.ArgumentList.Add(sf2);
         startInfo.ArgumentList.Add(dspreset);
 
@@ -96,7 +96,7 @@ for (int i = 0; i < files.Length; i++)
 
         if (process is null)
         {
-            Console.WriteLine("  ERROR: no se pudo iniciar SF22DS.");
+            Console.WriteLine("  ERROR: could not start SF22DS.");
             failed++;
             continue;
         }
@@ -110,10 +110,10 @@ for (int i = 0; i < files.Length; i++)
         }
         else
         {
-            Console.WriteLine($"  ERROR: código de salida {process.ExitCode}");
+            Console.WriteLine($"  ERROR: exit code {process.ExitCode}");
 
-            // Si el conversor creó el archivo pese al código de salida,
-            // lo dejamos intacto para que el usuario pueda inspeccionarlo.
+            // If the converter created the file despite the exit code,
+            // We leave it intact so that the user can inspect it.
             failed++;
         }
     }
@@ -126,12 +126,12 @@ for (int i = 0; i < files.Length; i++)
 
 Console.WriteLine();
 Console.WriteLine("==============================================");
-Console.WriteLine("                  RESUMEN");
+Console.WriteLine("                  SUMMARY");
 Console.WriteLine("==============================================");
-Console.WriteLine($"Encontrados : {files.Length}");
-Console.WriteLine($"Convertidos : {converted}");
-Console.WriteLine($"Omitidos    : {skipped}");
-Console.WriteLine($"Errores     : {failed}");
+Console.WriteLine($"Found       : {files.Length}");
+Console.WriteLine($"Converted   : {converted}");
+Console.WriteLine($"Skipped     : {skipped}");
+Console.WriteLine($"Errors      : {failed}");
 Console.WriteLine();
 
 return failed == 0 ? 0 : 2;
@@ -145,7 +145,7 @@ static string? FindConverter(string root, string? overridePath)
         if (File.Exists(path))
             return path;
 
-        Console.WriteLine($"AVISO: el conversor indicado no existe: {path}");
+        Console.WriteLine($"WARNING: The specified converter does not exist: {path}");
     }
 
     string fileName = OperatingSystem.IsWindows()
