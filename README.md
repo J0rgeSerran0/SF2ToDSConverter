@@ -1,7 +1,7 @@
 # SF2Converter
 
 > [!WARNING]
-> This utility uses [SF22DS](https://github.com/DecentSamples/SF22DS), a converter for SF2 sound fonts into Decent Sampler preset developed by **David Hilowitz**
+> This utility uses [**SF22DS**](https://github.com/DecentSamples/SF22DS), a converter for SF2 sound fonts into Decent Sampler preset developed by **David Hilowitz**
 > `SF22DS` is an external component and is not part of this repository. Its license and distribution terms depend on its author.
 > You have to put **SF22DS** in the same directory of **SF2toDSConverter**
 
