@@ -88,11 +88,11 @@ SF2ToDSConverter "/folder/other/MyLibrary" "/Converter/SF22DS.exe"
 3. Build the project.
 4. Execute the program from the folder that contains the SF2 sound fonts.
 
-The project uses `.NET 10`.
+The project uses `.NET 9`.
 
 ## Compile the project from the command line
 
-You need to have the .NET 10 SDK installed.
+You need to have the .NET 9 SDK installed.
 
 ```bash
 dotnet build -c Release
@@ -138,3 +138,13 @@ SKIPPED: the .dspreset already exists.
 ## License
 
 This project is published under the MIT license. See `LICENSE`.
+
+## Screenshots
+
+*This utility in execution*
+
+![](assets/images/image_001.png)
+
+![](assets/images/image_002.png)
+
+
